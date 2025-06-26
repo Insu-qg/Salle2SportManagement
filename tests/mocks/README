@@ -1,0 +1,88 @@
+# 🧪 Étape 2 – Stratégie de Mocking
+
+## 🎯 Objectif
+
+Définir une stratégie claire de mocking afin de :
+
+* Garantir l’isolation des **tests unitaires (TU)**.
+* Contrôler les dépendances dans les **tests d’intégration (TI)**.
+* Assurer **la reproductibilité et la rapidité** des tests.
+* Réduire les risques de fausses erreurs causées par l’environnement externe (DB, API, etc.).
+
+---
+
+## 1. 📦 Dépendances à mocker
+
+| Type                      | Élément                                   | Pourquoi le mocker ?                                  | Niveau  |
+| ------------------------- | ----------------------------------------- | ----------------------------------------------------- | ------- |
+| **Base de données**       | Prisma Client (`prisma.user.findMany`)    | Ne pas dépendre d’un vrai SGBD dans les TU            | TU / TI |
+| **Services tiers**        | `BillingService`, `EmailService`          | Eviter les effets de bord (ex. : facturation, envois) | TU / TI |
+| **Middleware auth**       | `isAuthenticated`, `hasRole(ADMIN)`       | Contrôler les cas utilisateurs sans login réel        | TU / TI |
+| **Requêtes réseau**       | Appels REST entre front/back              | Eviter les dépendances inter-app                      | TU      |
+| **Date/time**             | `Date.now()`, `new Date()`                | Contrôler les effets temporels (pénalités, délais)    | TU      |
+| **Fonctions utilitaires** | `calculatePenalty()`, `conflictChecker()` | Tester indépendamment des cas business                | TU      |
+
+---
+
+## 2. 🧰 Outils & Méthodes utilisés
+
+| Méthode  | Utilisation typique                                | Outils         |
+| -------- | -------------------------------------------------- | -------------- |
+| **Mock** | Simulation simple avec suivi d’appels              | Vitest / Jest  |
+| **Stub** | Comportement fixe pour tester différents scénarios | Sinon / Vitest |
+| **Fake** | Implémentation simplifiée (ex. fake DB, factory)   | Factory.ts     |
+
+---
+
+## 3. ✅ Exemples de structure de mocks (tests/mocks/)
+
+### 📁 `tests/mocks/`
+
+```
+tests/
+├── mocks/
+│   ├── prisma.mock.ts              # Mock du client Prisma
+│   ├── billingService.mock.ts      # Mock du service de facturation
+│   ├── auth.middleware.mock.ts     # Mock de l’authentification
+│   ├── date.mock.ts                # Mock de Date.now() pour pénalités
+│   ├── factories/
+│   │   ├── userFactory.ts          # Création d’utilisateurs mock
+│   │   ├── classFactory.ts         # Création de cours simulés
+│   │   └── subscriptionFactory.ts  # Création d’abonnements
+```
+
+---
+
+## 4. 🧪 Cas d’usage typiques
+
+| Test ciblé                     | Ce qu’on mock  | Exemple de scénario                      |
+| ------------------------------ | -------------- | ---------------------------------------- |
+| `BookingService.reserve()`     | Prisma + Date  | Tester un double booking ou une pénalité |
+| `SubscriptionController.put()` | BillingService | Simuler une erreur de paiement           |
+| `GET /dashboard/user/:id`      | Prisma         | Vérifier le rendu sans vraie base        |
+| Authentification front-end     | Middleware     | Simuler différents rôles (USER / ADMIN)  |
+
+---
+
+## 5. 🔧 Factories & helpers
+
+Nous avons ajouté dans `tests/mocks/factories/` des **factories réutilisables** pour :
+
+* Générer des utilisateurs, cours, abonnements valides ou cassés.
+* Simuler des cas aux limites (capacité atteinte, no-show…).
+
+Exemple :
+
+```ts
+// userFactory.ts
+export function createUser(overrides = {}) {
+  return {
+    id: 'user-123',
+    email: 'test@gym.com',
+    role: 'USER',
+    ...overrides,
+  };
+}
+```
+
+---
