@@ -9,5 +9,8 @@
   "scripts": {
     "test:frontend": "npm run test --workspace=frontend",
     "test:backend": "npm run test --workspace=backend"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.8.0"
   }
 }
