@@ -1,20 +1,20 @@
-// 📁 tests/mocks/date.mock.ts
-
+// tests/mocks/date.mock.ts
 export function mockDate(isoDate: string) {
   const OriginalDate = Date;
+  const mockTime = new OriginalDate(isoDate).getTime();
 
   class MockDate extends OriginalDate {
     constructor(...args: any[]) {
       if (args.length === 0) {
-        super(isoDate); // Utilise la date mockée
+        super(mockTime);
       } else {
         // @ts-expect-error: spread accepté dans ce contexte de test
-        super(...args); // Reproduit le comportement normal sinon
+        super(...args);
       }
     }
 
     static now() {
-      return new OriginalDate(isoDate).getTime();
+      return mockTime;
     }
 
     static parse = OriginalDate.parse;
@@ -30,4 +30,11 @@ export function mockDate(isoDate: string) {
   return () => {
     global.Date = OriginalDate;
   };
+}
+
+// Helper pour mock des dates relatives
+export function mockDateRelative(hoursFromNow: number) {
+  const mockTime = new Date();
+  mockTime.setHours(mockTime.getHours() + hoursFromNow);
+  return mockDate(mockTime.toISOString());
 }

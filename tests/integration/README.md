@@ -10,6 +10,7 @@ Effectuer des tests d’intégration couvrant les **flux critiques** entre modul
 | `user.integration.test.ts`         | Mise à jour du profil → validation, persistence, droits                         |
 | `subscription.integration.test.ts` | Création / expiration → effet sur accès aux cours ou actions limitées           |
 | `dashboard.integration.test.ts`    | Données agrégées pour un utilisateur sur 1 mois (cours, stats)                  |
+| `billing.integration.test.ts`        | Simulation de facturation → calculs, pénalités, génération d’un relevé          |
 
 ### Frontend : Scénarios d’intégration
 
@@ -18,6 +19,9 @@ Effectuer des tests d’intégration couvrant les **flux critiques** entre modul
 | `Login.integration.test.ts`     | Soumission du formulaire → redirection / message d’erreur backend        |
 | `Dashboard.integration.test.ts` | Rendu avec réservations expirées / utilisateur sans abonnement           |
 | `AdminView.integration.test.ts` | Création/suppression d’utilisateur, filtre par rôle, comportement erreur |
+| `BookingFlow.integration.test.ts`  | Réservation + annulation tardive → gestion message d’erreur + retour UI   |
+| `Register.integration.test.ts`     | Création de compte → soumission, champs invalides, message backend        |
+
 
 
 

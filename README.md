@@ -73,7 +73,7 @@ A complete fullstack gym management application built with modern web technologi
 4. **Access the application**
    - Frontend: http://localhost:8080
    - Backend API: http://localhost:3000
-   - Database: localhost:5432
+   - Database: localhost:5433
 
 ### Default Login Credentials
 
