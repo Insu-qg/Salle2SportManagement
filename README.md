@@ -175,6 +175,12 @@ gym-management-system/
    npm run seed
    ```
 
+### Docker cmd
+
+```bash
+   docker-compose up --build
+```
+
 ### Database Management
 
 - **View Database**: `npx prisma studio`
